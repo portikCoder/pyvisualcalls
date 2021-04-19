@@ -1,6 +1,6 @@
 # Userspecified
 **/.idea
-
+**/out
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -107,6 +107,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+venv36-32-pure
 env/
 venv/
 ENV/

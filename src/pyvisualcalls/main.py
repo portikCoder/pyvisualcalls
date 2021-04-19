@@ -25,11 +25,13 @@ def setup(config: Config):
 
 
 def read_config():
-    return Config("bitbucket-scanner", r"C:\dev\3ppautomation\bitbucket-scanner\src")
+    # return Config("bitbucket-scanner", r"C:\dev\3ppautomation\bitbucket-scanner\src")
+    return Config("svl-generator", r"C:\dev\3ppautomation\svl-generator")
 
 
 def discover_python_project(project_path: str) -> List[Path]:
-    project_files = [path for path in Path(project_path).rglob('*.py')]
+    project_files = [path for path in Path(project_path).rglob('./[!v][!e][!n]*/*.py') if
+                     not re.search('venv.*', path.__str__())]  # if 'venv' not in path
     logging.debug(project_files)
     return project_files
 
@@ -39,7 +41,7 @@ def map_python_file_into(project_file: Path, calls_and_callees_graph: DataStruct
     try:
         with open(project_file, 'r')as f:
             content = f.read()
-    except (PermissionError, FileNotFoundError) as pe_or_fnfe:
+    except (PermissionError, FileNotFoundError, UnicodeDecodeError) as pe_or_fnfe:
         logging.error(f"Could not read '{project_file}'! {pe_or_fnfe}")
         return
     if not content:
@@ -65,6 +67,9 @@ def build_calls_and_callees_graph(project_files: List[Path]) -> DataStructure_To
     return calls_and_callees_graph
 
 
+analysation = ''
+
+
 def execute_analyzation_for_python_project(config: Config):
     logging.info(f"Discover the specified python project: {config.project_path}")
     project_files = discover_python_project(config.project_path)
@@ -72,7 +77,8 @@ def execute_analyzation_for_python_project(config: Config):
     logging.debug(f"Result for calls_with_calees: {calls_with_calees}")
 
     logging.info("Visualize")
-    visualizer.visualize(config.project_name, calls_with_calees)
+    logging.info("is turned off now...")
+    # visualizer.visualize(config.project_name, calls_with_calees)
 
 
 def main():
